@@ -10,7 +10,7 @@ final case class Item private(
   def tweetString(hashTags: Set[String] = Set.empty): String = {
     val tags = hashTags.collect{case s if ! s.isEmpty => "#" + s }.mkString(" ")
     Iterator(
-      link, tags, escape(title), escape(description.replace("            <p>", ""))
+      link, tags, escape(title), escape(description.replace("            <p>", "").replace("<pre><code>",""))
     ).mkString("\n").take(LIMIT)
   }
 }

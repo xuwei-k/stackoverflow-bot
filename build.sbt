@@ -1,6 +1,6 @@
 name := "stackoverflow-bot"
 
-scalaVersion := "2.11.3"
+scalaVersion := "2.11.4"
 
 organization := "com.github.xuwei-k"
 

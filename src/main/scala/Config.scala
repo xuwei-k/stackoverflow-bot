@@ -9,7 +9,7 @@ abstract class Config{
   val tweetInterval: Duration = 1.second
   val interval: Duration
   val dbSize: Int = 100
-  val firstTweet: Boolean = false
+  val firstTweetCount: Int
 }
 
 abstract class TwitterSettings{

@@ -25,11 +25,9 @@ object Main{
     db.insert(firstData.map{_.link}.toList)
     printDateTime()
     println("first insert data = " + firstData)
-    if (firstTweet) {
-      firstData.reverseIterator.foreach { entry =>
-        Thread.sleep(tweetInterval.toMillis)
-        client.tweet(entry.tweetString(hashTags))
-      }
+    firstData.take(firstTweetCount).reverseIterator.foreach { entry =>
+      Thread.sleep(tweetInterval.toMillis)
+      client.tweet(entry.tweetString(hashTags))
     }
     loop(env)
   }

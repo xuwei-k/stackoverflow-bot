@@ -10,6 +10,7 @@ abstract class Config{
   val interval: Duration
   val dbSize: Int = 100
   val firstTweetCount: Int
+  val lang: Option[String]
 }
 
 abstract class TwitterSettings{

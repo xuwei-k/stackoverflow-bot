@@ -5,8 +5,13 @@ import java.io.File
 import java.net.URL
 
 object Main{
-  private def stackoverflow(tag: String): URL =
-    new URL("http://stackoverflow.com/feeds/tag?tagnames=" + tag + "&sort=newest")
+  private def stackoverflow(tag: String, lang: Option[String]): URL =
+    lang match {
+      case Some(l) => 
+        new URL("http://" + l + ".stackoverflow.com/feeds/tag?tagnames=" + tag + "&sort=newest")
+      case None =>
+        new URL("http://stackoverflow.com/feeds/tag?tagnames=" + tag + "&sort=newest")
+    }
 
   final val defaultConfigName = "config.scala"
 
@@ -21,7 +26,7 @@ object Main{
     val env = Env.fromConfigFile(file)
     import env._, env.config._
 
-    val firstData = getEntries(tag)
+    val firstData = getEntries(tag, lang)
     db.insert(firstData.map{_.link}.toList)
     printDateTime()
     println("first insert data = " + firstData)
@@ -38,7 +43,7 @@ object Main{
     allCatchPrintStackTrace{
       Thread.sleep(interval.toMillis)
       val oldIds = db.selectAll
-      val newData = getEntries(tag).filterNot{a => oldIds.contains(a.link)}
+      val newData = getEntries(tag, lang).filterNot{a => oldIds.contains(a.link)}
       db.insert(newData.map{_.link}.toList)
       newData.reverseIterator.foreach { e =>
         Thread.sleep(env.config.tweetInterval.toMillis)
@@ -48,8 +53,8 @@ object Main{
     loop(env.reload)
   }
 
-  def getEntries(tag: String): Seq[Item] = {
-    val x = scala.xml.XML.load(stackoverflow(tag))
+  def getEntries(tag: String, lang: Option[String]): Seq[Item] = {
+    val x = scala.xml.XML.load(stackoverflow(tag, lang))
     (x \ "entry").map(Item.apply)
   }
 

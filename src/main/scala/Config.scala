@@ -11,6 +11,7 @@ abstract class Config{
   val dbSize: Int = 100
   val firstTweetCount: Int
   val lang: Option[String]
+  val blockUsers: Set[Long]
 }
 
 abstract class TwitterSettings{

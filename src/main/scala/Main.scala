@@ -26,7 +26,7 @@ object Main{
     val env = Env.fromConfigFile(file)
     import env._, env.config._
 
-    val firstData = getEntries(tag, lang)
+    val firstData = getEntries(tag, lang, blockUsers)
     db.insert(firstData.map{_.link}.toList)
     printDateTime()
     println("first insert data = " + firstData)
@@ -43,7 +43,7 @@ object Main{
     allCatchPrintStackTrace{
       Thread.sleep(interval.toMillis)
       val oldIds = db.selectAll
-      val newData = getEntries(tag, lang).filterNot{a => oldIds.contains(a.link)}
+      val newData = getEntries(tag, lang, blockUsers).filterNot{a => oldIds.contains(a.link)}
       db.insert(newData.map{_.link}.toList)
       newData.reverseIterator.foreach { e =>
         Thread.sleep(env.config.tweetInterval.toMillis)
@@ -53,9 +53,9 @@ object Main{
     loop(env.reload)
   }
 
-  def getEntries(tag: String, lang: Option[String]): Seq[Item] = {
+  def getEntries(tag: String, lang: Option[String], blockUsers: Set[Long]): Seq[Item] = {
     val x = scala.xml.XML.load(stackoverflow(tag, lang))
-    (x \ "entry").map(Item.apply)
+    (x \ "entry").map(Item.apply).filterNot(item => blockUsers(item.authorId))
   }
 
   def printDateTime(): Unit = {

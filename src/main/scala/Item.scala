@@ -3,7 +3,8 @@ package stackoverflow_bot
 final case class Item private(
   link        :ITEM_URL,
   title       :String,
-  description :String
+  description :String,
+  authorId    :Long
 ) {
   import Item._
 
@@ -29,6 +30,7 @@ object Item{
   def apply(x: scala.xml.Node): Item = Item(
     (x \ "id").text,
     (x \ "title").text,
-    (x \ "summary").text
+    (x \ "summary").text,
+    (x \ "author" \ "uri").text.split('/').last.toLong
   )
 }

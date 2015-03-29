@@ -10,7 +10,7 @@ homepage := Some(url("https://github.com/xuwei-k/stackoverflow-bot"))
 
 resolvers += Opts.resolver.sonatypeReleases
 
-val twitter4jVersion = "4.0.2"
+val twitter4jVersion = "4.0.3"
 
 libraryDependencies ++= (
   ("org.scala-lang" % "scala-compiler" % scalaVersion.value) ::
